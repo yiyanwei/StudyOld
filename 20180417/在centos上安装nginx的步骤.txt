@@ -1,0 +1,19 @@
+在centos上安装nginx
+使用putty使用ssh连接到centos上（安装虚拟机）
+首先需要知道centos的ip地址
+如果安装的是精简版的centos的话，是没法直接通过ifconfig命令获取ip地址的
+想要ping的话，首先需要配置一个文件 /etc/sysconfig/network-scripts/ifcfg-ens33文件中ONBOOT改成yes，然后按esc键退出vi命令再按":",然后再输入wq保存退出
+想要知道ip地址需要安装一个包，安装包命令 sudo yum install net-tools，最后再使用命令重启service network restart
+
+sudo yum install epel-release（EPEL stands for Extra Packages for Enterprise Linux. Because yum as a package manager does not include the latest version of nginx in its default repository, installing EPEL will make sure that nginx on CentOS stays up to date）
+
+sudo yum install nginx（安装nginx）
+
+此时可以通过浏览器输入centosip地址访问nginx了，默认端口为80，如果输入之后不能访问的话，需要开启防火墙许可权限
+
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
+
+（备注：如何通过centos命令来查看隐藏文件或文件夹信息 ls -a）
+（备注：如何删除一个文件 rm -r 文件或文件夹）

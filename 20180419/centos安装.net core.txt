@@ -1,0 +1,29 @@
+先打开 https://www.microsoft.com/net/learn/get-started/linux/centos
+然后打开putty工具连接到centos系统上
+再根据地址提示的命令一步一步的操作
+
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo sh -c 'echo -e "[packages-microsoft-com-prod]\nname=packages-microsoft-com-prod \nbaseurl= https://packages.microsoft.com/yumrepos/microsoft-rhel7.3-prod\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/dotnetdev.repo'
+
+sudo yum update
+sudo yum install libunwind libicu
+sudo yum install dotnet-sdk-2.0.0（sudo yum install dotnet-sdk-2.1.105 安装这个版本有问题，提示：dotnet-runtime-2.0.7-rhel.7-x64.rpm is not signed）
+然后又出现了一个问题就是我本地的.netcore sdk的版本是2.1.104版本，将本地的.net core项目发布到centos上时出现版本不一致的相关错误，后来我就直接安装了netcore 2.1.104版本
+sudo yum install dotnet-sdk-2.1.104
+就这样将dotnet-sdk-2.1.104版本安装到了centos上，然后将visual studio 2017发布的.net core项目（版本为2.1.104版本）发布到centos上
+运行命令：dotnet 项目.dll
+默认是运行在5000端口上
+
+如何将.net core项目映射到nginx上，nginx默认有一个配置在 /etc/nginx/nginx.conf 配置文件，其中有一个默认的server配置，
+需要将其注释掉在前面加#
+然后配置我们自己需要映射的5000端口
+配置信息如下：
+server{
+	listen 80;
+	location / {
+		proxy_pass http://localhost:5000;
+	}
+}
+然后wq命令保存退出
+最后重启nginx，命令如下：
+nginx -s reload
